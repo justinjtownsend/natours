@@ -6,6 +6,16 @@
     "plugin:prettier/recommended"
   ],
   "plugins": ["prettier"],
+  "ecmaFeatures": {
+    "modules": true,
+    "spread": true,
+    "restParams": true
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "spaced-comment": "off",
@@ -19,6 +29,10 @@
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "prefer-destructuring": ["error", { "object": true, "array": false }],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
+    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
+    "no-undef": 2
+  },
+  "parserOptions": {
+    "sourceType": "module"
   }
 }
