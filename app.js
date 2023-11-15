@@ -27,8 +27,92 @@ app.set('views', path.join(__dirname, 'views'));
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set scurity HTTP Headers
-app.use(helmet());
+// Set security HTTP Headers
+// HELMET source URLs configuration for Content Security Policy (CSP)
+// const scriptSrcUrls = [
+//   'https://unpkg.com/',
+//   'https://*.mapbox.com/',
+//   'https://*.tiles.mapbox.com/',
+//   'https://api.mapbox.com/',
+//   'https://events.mapbox.com/',
+//   'https://js.stripe.com',
+//   'https://m.stripe.network',
+//   'https://*.cloudflare.com',
+// ];
+// const styleSrcUrls = [
+//   'https://unpkg.com/',
+//   'https://api.mapbox.com/',
+//   'https://fonts.googleapis.com/',
+// ];
+// const connectSrcUrls = [
+//   'https://unpkg.com',
+//   'https://*.mapbox.com/',
+//   'https://*.tiles.mapbox.com/',
+//   'https://api.mapbox.com/',
+//   'https://events.mapbox.com/',
+//   'https://*.stripe.com',
+//   'https://bundle.js:*',
+//   'ws://127.0.0.1:*/',
+// ];
+const scriptSrcUrls = [
+  'https://api.tiles.mapbox.com/',
+  'https://api.mapbox.com/',
+];
+const styleSrcUrls = [
+  'https://api.mapbox.com/',
+  'https://api.tiles.mapbox.com/',
+  'https://fonts.googleapis.com/',
+];
+const connectSrcUrls = [
+  'https://api.mapbox.com/',
+  'https://a.tiles.mapbox.com/',
+  'https://b.tiles.mapbox.com/',
+  'https://events.mapbox.com/',
+];
+const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: [],
+      connectSrc: ["'self'", ...connectSrcUrls],
+      scriptSrc: ["'self'", ...scriptSrcUrls],
+      styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+      workerSrc: ["'self'", 'blob:'],
+      childSrc: ["'self'", 'blob:'],
+      objectSrc: [],
+      imgSrc: ["'self'", 'blob:', 'data:'],
+      fontSrc: ["'self'", ...fontSrcUrls],
+    },
+  })
+);
+
+// app.use(helmet());
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       'default-src': ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
+//       'base-uri': ["'self'"],
+//       'font-src': ["'self'", ...fontSrcUrls],
+//       'script-src': ["'self'", 'https:', 'http:', 'blob:', ...scriptSrcUrls],
+//       'frame-src': ["'self'", 'https://js.stripe.com'],
+//       'object-src': ["'none'"],
+//       'style-src': ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+//       'worker-src': ["'self'", 'blob:', 'https://m.stripe.network'],
+//       'child-src': ["'self'", 'blob:'],
+//       'img-src': ["'self'", 'blob:', 'data:', 'https:'],
+//       'form-action': ["'self'"],
+//       'connect-src': [
+//         "'self'",
+//         "'unsafe-inline'",
+//         'data:',
+//         'blob:',
+//         ...connectSrcUrls,
+//       ],
+//       upgradeInsecureRequests: [],
+//     },
+//   })
+// );
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
@@ -73,7 +157,7 @@ app.use(compression());
 // Testing middleware
 app.use((req, res, next) => {
   req.reqTime = new Date().toISOString();
-  console.log(req.cookies);
+  // console.log(req.cookies);
   next();
 });
 

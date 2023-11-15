@@ -7,9 +7,6 @@ export const displayMap = (locations) => {
     container: 'map',
     style: 'mapbox://styles/justinjtownsend/clontee8p00dm01pbel4a0vj3',
     scrollZoom: false,
-    // center: [-118.5106963, 34.0178337],
-    // zoom: 10,
-    // interactive: false,
   });
 
   const bounds = new mapboxgl.LngLatBounds();
@@ -27,7 +24,7 @@ export const displayMap = (locations) => {
       .setLngLat(loc.coordinates)
       .addTo(map);
 
-    //  Add popup
+    // Add popup
     new mapboxgl.Popup({
       offset: 30
     })
