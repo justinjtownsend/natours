@@ -47,7 +47,7 @@ const sendErrorDev = (err, req, res) => {
 const sendErrorProd = (err, req, res) => {
   // A) API
   if (req.originalUrl.startsWith('/api')) {
-    // Operational, trusted error: send message to client
+    // A) Operational, trusted error: send message to client
     if (err.isOperational) {
       return res.status(err.statusCode).json({
         status: err.status,
@@ -65,6 +65,7 @@ const sendErrorProd = (err, req, res) => {
     });
   }
   // B) RENDERED WEBSITE
+  // A) Operational, trusted error: send message to client
   if (err.isOperational) {
     return res.status(err.statusCode).render('error', {
       title: 'Something went wrong!',
@@ -92,17 +93,6 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
     error.message = err.message;
-
-    // let error = {
-    //   statusCode: err.statusCode,
-    //   status: err.status,
-    //   name: err.name,
-    //   code: err.code,
-    //   errmsg: err.message,
-    //   path: err.path,
-    //   value: err.value,
-    //   errors: err.errors,
-    // };
 
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);

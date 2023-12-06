@@ -579,10 +579,13 @@ var _esRegexpFlagsJs = require("core-js/modules/es.regexp.flags.js");
 var _esTypedArraySetJs = require("core-js/modules/es.typed-array.set.js");
 var _mapboxJs = require("./mapbox.js");
 var _loginJs = require("./login.js");
+var _updateSettingsJs = require("./updateSettings.js");
 // DOM ELEMENTS
 const mapBox = document.getElementById("map");
-const loginForm = document.querySelector(".form");
+const loginForm = document.querySelector(".form--login");
 const logOutBtn = document.querySelector(".nav__el--logout");
+const userDataForm = document.querySelector(".form-user-data");
+const userPasswordForm = document.querySelector(".form-user-password");
 // DELEGATION
 if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
@@ -592,12 +595,36 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    console.log(email, password);
     (0, _loginJs.login)(email, password);
 });
 if (logOutBtn) logOutBtn.addEventListener("click", (0, _loginJs.logout));
+if (userDataForm) userDataForm.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    (0, _updateSettingsJs.updateSettings)({
+        name,
+        email
+    }, "data");
+});
+if (userPasswordForm) userDataForm.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    document.querySelector("btn--save-password").textContent = "Updating...";
+    const passwordCurrent = document.getElementById("password-current").value;
+    const password = document.getElementById("password").value;
+    const passwordConfirm = document.getElementById("password-confirm").value;
+    await (0, _updateSettingsJs.updateSettings)({
+        passwordCurrent,
+        password,
+        passwordConfirm
+    }, "password");
+    document.querySelector("btn--save-password").textContent = "Save password";
+    document.getElementById("password-current").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("password-confirm").value = "";
+});
 
-},{"core-js/modules/es.regexp.flags.js":"2atBn","core-js/modules/es.typed-array.set.js":"dqSNH","./mapbox.js":"jBGO5","./login.js":"2R5m6"}],"2atBn":[function(require,module,exports) {
+},{"core-js/modules/es.regexp.flags.js":"2atBn","core-js/modules/es.typed-array.set.js":"dqSNH","./mapbox.js":"jBGO5","./login.js":"2R5m6","./updateSettings.js":"fbr9y"}],"2atBn":[function(require,module,exports) {
 "use strict";
 var global = require("c6bf5eee641c0bcc");
 var DESCRIPTORS = require("32574bd865b8e6e5");
@@ -1849,7 +1876,6 @@ parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "logout", ()=>logout);
 var _alerts = require("./alerts");
 const login = async (email, password)=>{
-    console.log(email, password);
     try {
         const res = await axios({
             method: "POST",
@@ -1894,11 +1920,32 @@ const hideAlert = ()=>{
 };
 const showAlert = (type, msg)=>{
     hideAlert();
-    const markup = `<div class="alert alert--${type}>${msg}</div>`;
+    const markup = `<div class="alert alert--${type}">${msg}</div>`;
     document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
     window.setTimeout(hideAlert, 5000);
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"1Nfsz"}]},["3JS9s","9DjZx"], "9DjZx", "parcelRequire11c7")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"1Nfsz"}],"fbr9y":[function(require,module,exports) {
+/* eslint-disable */ // updateData
+// import axios from 'axios';
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "updateSettings", ()=>updateSettings);
+var _alerts = require("./alerts");
+const updateSettings = async (data, type)=>{
+    try {
+        const url = type === "password" ? "http://127.0.0.1/3000/api/v1/users/updateMyPassword" : "http://127.0.0.1/3000/api/v1/users/updateMe";
+        const res = await axios({
+            method: "PATCH",
+            url: url,
+            data: data
+        });
+        if (res.data.status === "success") (0, _alerts.showAlert)("success", `${type.toUpperCase()} updated successfully!`);
+    } catch (err) {
+        (0, _alerts.showAlert)("error", err.response.data.message);
+    }
+};
+
+},{"./alerts":"6lfZR","@parcel/transformer-js/src/esmodule-helpers.js":"1Nfsz"}]},["3JS9s","9DjZx"], "9DjZx", "parcelRequire11c7")
 
 //# sourceMappingURL=indexBundled.js.map

@@ -9,6 +9,7 @@ const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 
 const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -24,6 +25,14 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES
+// Implement CORS
+app.use(cors());
+// Access-Control-Allow-Origin
+
+// Pre-flight handling
+//  EXAMPLE: app.options('/api/v1/tours/:id', cors());
+app.options('*', cors());
+
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -76,7 +85,7 @@ app.use(
 		directives: {
 			defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
 			connectSrc: ["'self'", 'ws:', 'http:', ...connectSrcUrls],
-			scriptSrc: ["'self'", 'https:', ...scriptSrcUrls],
+			scriptSrc: ["'self'", 'https:', 'unsafe-eval', ...scriptSrcUrls],
 			styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
 			workerSrc: ["'self'", 'blob:'],
 			childSrc: ["'self'", 'blob:'],
@@ -130,6 +139,7 @@ app.use('/api', limiter);
 
 // Body parser, reading data from the body into req.body
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
