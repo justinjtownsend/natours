@@ -2,7 +2,11 @@
   "name": "natours",
   "version": "1.0.0",
   "description": "Learning node, express and MongoDB",
+  "author": "Justin Townsend",
+  "license": "ISC",
   "main": "app.js",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "webUI": "public/js/indexBundled.js",
   "targets": {
     "main": false,
     "webUI": {
@@ -16,14 +20,14 @@
     "watch:js": "parcel watch ",
     "build": "parcel build ./public/js/index.js --dist-dir ./public/js/"
   },
-  "author": "Justin Townsend",
-  "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "axios": "^1.6.0",
+    "axios": "^1.6.2",
+    "babel": "^6.23.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
+    "core-js": "^3.33.3",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-mongo-sanitize": "^2.2.0",
@@ -35,6 +39,7 @@
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.5",
     "pug": "^3.0.2",
+    "regenerator-runtime": "^0.14.0",
     "slugify": "^1.6.6",
     "validator": "^13.9.0",
     "xss-clean": "^0.1.4"

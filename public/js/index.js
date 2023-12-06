@@ -1,8 +1,10 @@
 /* eslint-disable */
-import '@babel/polyfill';
-import { displayMap } from './mapbox';
-import { login } from './login';
-import { logout } from './login';
+// import "@babel/polyfill";
+import 'core-js/stable';
+import 'regenerator-runtime/runtime.js';
+
+import { displayMap } from './mapbox.js';
+import { login, logout } from './login.js';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -24,4 +26,4 @@ if (loginForm)
         login(email, password);
     });
 
-if (logOutBtn) logOutBtn.addEventListener('click', logout)
+if (logOutBtn) logOutBtn.addEventListener('click', logout);
