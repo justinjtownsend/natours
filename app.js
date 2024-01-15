@@ -25,103 +25,86 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES
-// Implement CORS
-app.use(cors());
-// Access-Control-Allow-Origin
 
-// Pre-flight handling
-//  EXAMPLE: app.options('/api/v1/tours/:id', cors());
+// 1A) Implement CORS
+app.use(cors());
+
+// 1B) Pre-flight handling
 app.options('*', cors());
 
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set security HTTP Headers
+// 1C) Helmet: Set security HTTP Headers
 // HELMET source URLs configuration for Content Security Policy (CSP)
-// const scriptSrcUrls = [
-// 	'https://unpkg.com/',
-// 	'https://*.mapbox.com/',
-// 	'https://*.tiles.mapbox.com/',
-// 	'https://api.mapbox.com/',
-// 	'https://events.mapbox.com/',
-// 	'https://js.stripe.com',
-// 	'https://m.stripe.network',
-// 	'https://*.cloudflare.com',
-// ];
-// const styleSrcUrls = [
-//   'https://unpkg.com/',
-//   'https://api.mapbox.com/',
-//   'https://fonts.googleapis.com/',
-// ];
 const connectSrcUrls = [
   // 	'https://unpkg.com',
   'https://*.tiles.mapbox.com/',
   'https://api.mapbox.com/',
+  // 	'https://a.tiles.mapbox.com/',
+  // 	'https://b.tiles.mapbox.com/',
   'https://events.mapbox.com/',
   // 	'https://*.stripe.com',
   // 	'https://bundle.js:*',
   // 	'ws://127.0.0.1:*/',
 ];
+
 const scriptSrcUrls = [
+  // 	'https://unpkg.com/',
+  'https://*.cloudflare.com',
+  // 	'https://*.mapbox.com/',
   'https://*.tiles.mapbox.com/',
   'https://api.mapbox.com/',
   'https://events.mapbox.com/',
+  // 	'https://js.stripe.com',
+  // 	'https://m.stripe.network',
+  // 	'https://*.cloudflare.com',
 ];
+
 const styleSrcUrls = [
+  //   'https://unpkg.com/',
   'https://api.mapbox.com/',
   'https://api.tiles.mapbox.com/',
   'https://fonts.googleapis.com/',
 ];
-// const connectSrcUrls = [
-// 	'https://api.mapbox.com/',
-// 	'https://a.tiles.mapbox.com/',
-// 	'https://b.tiles.mapbox.com/',
-// 	'https://events.mapbox.com/',
-// ];
+
 const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
+// app.use(helmet()); Add a straightforward CSP
 app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
-      connectSrc: ["'self'", 'ws:', 'http:', ...connectSrcUrls],
-      scriptSrc: ["'self'", 'https:', 'unsafe-eval', ...scriptSrcUrls],
-      styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
-      workerSrc: ["'self'", 'blob:'],
-      childSrc: ["'self'", 'blob:'],
-      objectSrc: [],
-      imgSrc: ["'self'", 'blob:', 'data:'],
-      fontSrc: ["'self'", ...fontSrcUrls],
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
+        baseUri: ["'self'"],
+        fontSrc: ["'self'", ...fontSrcUrls],
+        scriptSrc: [
+          "'self'",
+          'https:',
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          ...scriptSrcUrls,
+        ],
+        // 'frame-src': ["'self'", 'https://js.stripe.com'],
+        objectSrc: ["'none'"],
+        styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+        workerSrc: ["'self'", 'blob:'],
+        childSrc: ["'self'", 'blob:'],
+        imgSrc: ["'self'", 'blob:', 'data:', 'https:'],
+        // 'form-action': ["'self'"],
+        connectSrc: [
+          "'self'",
+          // "'unsafe-inline'",
+          'data:',
+          'blob:',
+          'ws:',
+          'http:',
+          ...connectSrcUrls,
+        ],
+      },
     },
   })
 );
-
-// app.use(helmet());
-// app.use(
-// 	helmet.contentSecurityPolicy({
-// 		directives: {
-// 			'default-src': ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
-// 			'base-uri': ["'self'"],
-// 			'font-src': ["'self'", ...fontSrcUrls],
-// 			'script-src': ["'self'", 'https:', 'http:', 'blob:', ...scriptSrcUrls],
-// 			'frame-src': ["'self'", 'https://js.stripe.com'],
-// 			'object-src': ["'none'"],
-// 			'style-src': ["'self'", "'unsafe-inline'", ...styleSrcUrls],
-// 			'worker-src': ["'self'", 'blob:', 'https://m.stripe.network'],
-// 			'child-src': ["'self'", 'blob:'],
-// 			'img-src': ["'self'", 'blob:', 'data:', 'https:'],
-// 			'form-action': ["'self'"],
-// 			'connect-src': [
-// 				"'self'",
-// 				"'unsafe-inline'",
-// 				'data:',
-// 				'blob:',
-// 				...connectSrcUrls,
-// 			],
-// 			upgradeInsecureRequests: [],
-// 		},
-// 	})
-// );
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {

@@ -16,7 +16,8 @@ router
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
 router.route('/tour-stats').get(tourController.getTourStats);
-router.route('/monthly-plan/:year')
+router
+  .route('/monthly-plan/:year')
   .get(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide', 'guide'),
@@ -25,8 +26,8 @@ router.route('/monthly-plan/:year')
 
 // /tours-within?distance-233centre=-40,45&unit=mi
 // /tours-within/233/center/-40,45/unit/mi
-router.route(
-  '/tours-within/:distance/center/:latlng/unit/:unit')
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
   .get(tourController.getToursWithin);
 
 router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
@@ -42,8 +43,11 @@ router
 router
   .route('/:id')
   .get(tourController.getTour)
-  .patch(authController.protect,
+  .patch(
+    authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
+    tourController.uploadTourImages,
+    tourController.resizeTourImages,
     tourController.updateTour
   )
   .delete(
