@@ -18,7 +18,7 @@
     "start:prod": "SET NODE_ENV=production&&nodemon server.js",
     "debug": "SET NODE_ENV=production&&ndb server.js",
     "watch:js": "parcel watch ",
-    "build": "parcel build ./public/js/index.js --dist-dir ./public/js/"
+    "build:js": "parcel build "
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

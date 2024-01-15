@@ -8,8 +8,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   //  1) Get the currently booked tour
   const tour = await Tour.findById(req.params.tourId);
 
-  console.log(tour);
-
   // 2) Create the checkout session
   // Note: Doing the course during late 2023 / early 2024
   // see slight adjustments to API payload (stripe @14.12.0)
