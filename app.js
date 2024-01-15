@@ -16,6 +16,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
 
 // Start express app
@@ -85,7 +86,7 @@ app.use(
           "'unsafe-eval'",
           ...scriptSrcUrls,
         ],
-        // 'frame-src': ["'self'", 'https://js.stripe.com'],
+        'frame-src': ["'self'", 'https://js.stripe.com'],
         objectSrc: ["'none'"],
         styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
         workerSrc: ["'self'", 'blob:'],
@@ -159,6 +160,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
