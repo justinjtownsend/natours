@@ -27,10 +27,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           product_data: {
             name: `${tour.name} Tour`,
             description: tour.summary,
-            // images: [`https://natours.dev/img/tours/${tour.imageCover}`],
             images: [
-              'https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg',
-            ],
+              `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`],
           },
           unit_amount: tour.price * 100,
         },
