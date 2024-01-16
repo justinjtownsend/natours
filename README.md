@@ -13,6 +13,7 @@ The application is built using recent developments in the web-app eco-system inc
    - rate limiting
    - compression
    - route protection etc.
+7. API development and design using [Postman](https://www.postman.com/)
 
 A small amount of client-side development was included:
 
